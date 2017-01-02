@@ -1,6 +1,7 @@
     import React, {Component} from 'react';
     import  {connect} from 'react-redux';
     import {Link} from 'react-router';
+    import Menu from './menu';
 
 
     class Header extends Component {
@@ -10,7 +11,12 @@
             if (this.props.authenticated && this.props.authenticated != undefined) {
                 //show link to logout
                 return [
-
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/home" key={5}>Home </Link>
+                    </li>,
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/settings" key={4}>Settings </Link>
+                    </li>,
                     <li className="nav-item">
                         <Link className="nav-link" to="/signOut" key={3}> Sign Out</Link>
                     </li>
@@ -33,13 +39,18 @@
 
         render() {
             return (
-                <nav className="navbar navbar-light">
-                    <Link to="/" className="navbar-brand"> Redux Auth</Link>
-                    <ul className="nav navbar-nav">
-
+                <div>
+                <nav id="navbar" className="navbar navbar-default custom-navbar">
+                <Menu />
+                    <Link to="/" className="navbar-brand"> Portal </Link>
+         
+                 <div id="navbar-right" className="custom">
+                    <ul className="nav navbar-nav navbar-right">
                         {this.renderLinks()}
                     </ul>
+                </div>
                 </nav>
+                </div>
             );
         }
     }

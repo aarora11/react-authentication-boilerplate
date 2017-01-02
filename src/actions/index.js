@@ -3,10 +3,22 @@ import {browserHistory} from 'react-router';
 import {AUTH_USER,
     UNAUTH_USER,
     AUTH_ERROR,
-    FETCH_MESSAGE
+    FETCH_MESSAGE,
+    QUOTE,
+    MATCHES
 } from './types';
 import {} from './types';
 const ROOT_URL = 'http://localhost:3090';
+const TEMP_ROOT_URL = 'http://localhost:8000/ReactServer/webresources/authenticate';
+
+
+function unicodeToChar(text) {
+   return text.replace(/\\u[\dA-F]{4}/gi, 
+          function (match) {
+              console.log(String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16)));
+               return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+          });
+}
 
 
 export function signInUser({email, password}) {
@@ -34,8 +46,12 @@ export function signInUser({email, password}) {
 
 export function signUpUser({email,password}){
     return function (dispatch) {
-        axios.post(`${ROOT_URL}/signUp`, {email, password}).then(response =>{
-            console.log("inside then", response.data);
+        axios.post(`${TEMP_ROOT_URL}/signUp`,{
+            headers: {
+                'Content-Type': 'text/plain'
+            }
+        }, {email, password}).then(response =>{
+            
             dispatch({type : AUTH_USER});
             localStorage.setItem('token', response.data.token);
             browserHistory.push('/feature');
@@ -70,5 +86,36 @@ export function fetchMessage() {
            });
 
         })  ;
+    }
+}
+
+export function fetchQuote(){
+ 
+    return function(dispatch){
+        var d = new Date();
+        var n = d.getTime();
+        axios.get(`http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1?${n}`).then(response=>{
+           var str = unicodeToChar(response.data);
+            dispatch({
+                type : QUOTE,
+                payload: response.data
+            });
+
+        });
+    }
+}
+
+export function fetchMatches(){
+    var config = {
+  headers: {'apikey': 'qG1KVIL2x6XVXdgkP03p2TCIqCg1 '}
+};
+    return function(dispatch){
+        axios.get(`http://cricapi.com/api/matches/`, config).then(response=>{
+            console.log("Matches data", response.data);
+            dispatch({
+                type: MATCHES,
+                payload: response.data.message
+            });
+        });
     }
 }

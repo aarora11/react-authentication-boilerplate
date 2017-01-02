@@ -10,6 +10,7 @@ import SignUp from './components/auth/signUp';
 import reducers from './reducers';
 import SignIn from './components/auth/signIn';
 import Feature from './components/feature';
+import Settings from './components/settings';
 import reduxThunk from 'redux-thunk';
 import RequireAuth from './components/auth/require_auth';
 import Welcome from './components/welcome';
@@ -34,6 +35,7 @@ ReactDOM.render(
                 <Route path="signOut" component={SignOut}/>
                 <Route path="signUp" component={SignUp} />
                 <Route path="feature" component={RequireAuth(Feature)}/>
+                <Route path="settings" component={RequireAuth(Settings)}/>
             </Route>
         </Router>
     </Provider>
