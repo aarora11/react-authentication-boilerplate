@@ -15,7 +15,7 @@ export default function (state = {}, action) {
         case FETCH_MESSAGE :
             return {...state, message: action.payload};
         case QUOTE:
-            return {...state, quote: action.payload};    
+            return {...state, quote: action.payload.quote, Patients : action.payload.Patients};    
     }
     return state;
 }

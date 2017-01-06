@@ -29,7 +29,7 @@ class SignUp extends Component {
             email, password, passwordConfirm
         }} = this.props;
         return(
-            <form onSubmit={handleSubmit(this.handleSignin.bind(this))}>
+            <form className="signInForms" onSubmit={handleSubmit(this.handleSignin.bind(this))}>
                 <fieldset className="form-group">
                     <Field component={renderField} type="text" name="email" label="Email"/>
                 </fieldset>

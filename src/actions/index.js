@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {browserHistory} from 'react-router';
+
 import {AUTH_USER,
     UNAUTH_USER,
     AUTH_ERROR,
@@ -9,23 +10,25 @@ import {AUTH_USER,
 } from './types';
 import {} from './types';
 const ROOT_URL = 'http://localhost:3090';
-const TEMP_ROOT_URL = 'http://localhost:8000/ReactServer/webresources/authenticate';
+const TEMP_ROOT_URL = 'http://localhost:8000/Test/webresources/authenticate';
+var querystring = require('querystring');
 
 
-function unicodeToChar(text) {
-   return text.replace(/\\u[\dA-F]{4}/gi, 
-          function (match) {
-              console.log(String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16)));
-               return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
-          });
-}
 
 
 export function signInUser({email, password}) {
     return function (dispatch) {
-
+        
         //Submit email password to server
-      axios.post(`${ROOT_URL}/signin`, {email, password})
+      axios.post(`${TEMP_ROOT_URL}`, querystring.stringify({
+            email: email,
+            password: password,
+            
+    }), {
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+      } 
+    })
         //ES6 equivalent to
         // {email : email,
         // password : password}
@@ -33,7 +36,7 @@ export function signInUser({email, password}) {
               //If request is good -- update state to indicate user is authenticated
               dispatch({type: AUTH_USER});
               //Save JWT token
-              localStorage.setItem('token', response.data.token);
+              localStorage.setItem('token', response.data);
               //redirect to /feature
             browserHistory.push('/feature');
           })
@@ -46,14 +49,18 @@ export function signInUser({email, password}) {
 
 export function signUpUser({email,password}){
     return function (dispatch) {
-        axios.post(`${TEMP_ROOT_URL}/signUp`,{
+        axios.post(`${TEMP_ROOT_URL}/signUp`, querystring.stringify({
+            email: email,
+            password: password,
+            
+    }),{
             headers: {
-                'Content-Type': 'text/plain'
+               'content-type': 'application/x-www-form-urlencoded'
             }
-        }, {email, password}).then(response =>{
+        }).then(response =>{
             
             dispatch({type : AUTH_USER});
-            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('token', response.data);
             browserHistory.push('/feature');
         }).catch((errorObj)=>{
             dispatch(authError(errorObj.response.data.error));
@@ -78,7 +85,7 @@ export function authError(error){
 export function fetchMessage() {
     return function (dispatch) {
         axios.get(ROOT_URL,{
-            headers: {authorization : localStorage.getItem('token')}
+            headers: {authorization : "Bearer".concat(localStorage.getItem('token'))}
         }).then(response =>{
            dispatch({
                type: FETCH_MESSAGE,
@@ -89,13 +96,18 @@ export function fetchMessage() {
     }
 }
 
+
 export function fetchQuote(){
  
     return function(dispatch){
         var d = new Date();
         var n = d.getTime();
-        axios.get(`http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1?${n}`).then(response=>{
-           var str = unicodeToChar(response.data);
+        axios.get(`http://localhost:8000/Test/webresources/dashboard`, {
+            headers: {
+               authorization : "Bearer".concat(localStorage.getItem('token'))
+
+        }}).then(response=>{
+            console.log("Quote --- ", response);
             dispatch({
                 type : QUOTE,
                 payload: response.data
@@ -104,6 +116,7 @@ export function fetchQuote(){
         });
     }
 }
+
 
 export function fetchMatches(){
     var config = {

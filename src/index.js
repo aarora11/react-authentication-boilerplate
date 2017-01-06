@@ -14,6 +14,7 @@ import Settings from './components/settings';
 import reduxThunk from 'redux-thunk';
 import RequireAuth from './components/auth/require_auth';
 import Welcome from './components/welcome';
+import PatientDetails from './components/patientDetails';
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
 const token = localStorage.getItem('token');
@@ -36,6 +37,7 @@ ReactDOM.render(
                 <Route path="signUp" component={SignUp} />
                 <Route path="feature" component={RequireAuth(Feature)}/>
                 <Route path="settings" component={RequireAuth(Settings)}/>
+                <Route path="patientDetails/:testvalue" component={RequireAuth(PatientDetails)}/>
             </Route>
         </Router>
     </Provider>

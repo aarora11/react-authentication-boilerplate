@@ -11,26 +11,24 @@
             if (this.props.authenticated && this.props.authenticated != undefined) {
                 //show link to logout
                 return [
-                    <li className="nav-item">
+                    <div>
                         <Link className="nav-link" to="/home" key={5}>Home </Link>
-                    </li>,
-                    <li className="nav-item">
+                    
+                    
                         <Link className="nav-link" to="/settings" key={4}>Settings </Link>
-                    </li>,
-                    <li className="nav-item">
+                    
                         <Link className="nav-link" to="/signOut" key={3}> Sign Out</Link>
-                    </li>
+                    </div>
 
                 ];
             } else {
                 //show user to login
                 return [
-                    <li className="nav-item">
+                    <div>
                         <Link className="nav-link" to="/signIn" key={1}> Sign In</Link>
-                    </li>,
-                    <li className="nav-item">
+                    
                         <Link className="nav-link" to="/signUp" key={2}> Sign Up</Link>
-                    </li>
+                    </div>
                 ];
             }
 
@@ -44,10 +42,10 @@
                 <Menu />
                     <Link to="/" className="navbar-brand"> Portal </Link>
          
-                 <div id="navbar-right" className="custom">
-                    <ul className="nav navbar-nav navbar-right">
+                 <div id="navigation"  className="custom">
+                    
                         {this.renderLinks()}
-                    </ul>
+                    
                 </div>
                 </nav>
                 </div>
